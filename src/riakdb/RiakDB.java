@@ -53,19 +53,15 @@ public class RiakDB {
         
         YokozunaIndex subIndex = new YokozunaIndex("subInd");
         YokozunaIndex objIndex = new YokozunaIndex("objInd");
-        YokozunaIndex lvlIndex = new YokozunaIndex("lvlInd");
         
         StoreIndex subStoreIndex = new StoreIndex.Builder(subIndex).build();
         StoreIndex objStoreIndex = new StoreIndex.Builder(objIndex).build();
-        StoreIndex lvlStoreIndex = new StoreIndex.Builder(lvlIndex).build();
         
         client.execute(subStoreIndex);
         client.execute(objStoreIndex);
-        client.execute(lvlStoreIndex);
         
         Namespace subNamespace = new Namespace("sub");
         Namespace objNamespace = new Namespace("obj");
-        Namespace lvlNamespace = new Namespace("lvl");
         
         StoreBucketProperties subProp = new StoreBucketProperties.Builder(subNamespace).withSearchIndex("subInd").build();
         
@@ -73,9 +69,6 @@ public class RiakDB {
 
         StoreBucketProperties objProp = new StoreBucketProperties.Builder(objNamespace).withSearchIndex("objInd").build();
         client.execute(objProp);
-
-        StoreBucketProperties lvlProp = new StoreBucketProperties.Builder(lvlNamespace).withSearchIndex("lvlInd").build();
-        client.execute(lvlProp);
         
         //http://docs.basho.com/riak/latest/dev/using/search/
         
@@ -117,26 +110,6 @@ public class RiakDB {
             StoreValue sv = new StoreValue.Builder(object).withLocation(location).build();
             client.execute(sv);
             id = id + 1;
-        }
-
-        String filePath3 = args[2];//"lvl";
-        FileReader reader3 = new FileReader(filePath3);
-        JSONParser jsonParser3 = new JSONParser();
-        Object jsonObject3 = jsonParser3.parse(reader3);
-        JSONArray lvl = (JSONArray) jsonObject3;
-        Iterator k = lvl.iterator();
-
-        while (k.hasNext()) {
-
-            RiakObject object = new RiakObject().
-                    setContentType("application/json").
-                    setValue(BinaryValue.create(k.next().toString()));
-
-            Location location = new Location(lvlNamespace, Integer.toString(id));
-
-            StoreValue sv = new StoreValue.Builder(object).withLocation(location).build();
-            client.execute(sv);
-            id = id + 1; // уникальный id
         }
         
         String username = "alex";
