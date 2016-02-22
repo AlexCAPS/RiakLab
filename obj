@@ -1,0 +1,5 @@
+[
+{"path_s" : "/home", "lvl_i" : 1},
+{"path_s" : "/home/alex", "lvl_i" : 2},
+{"path_s" : "/home/alex/file3", "lvl_i" : 3},
+]
